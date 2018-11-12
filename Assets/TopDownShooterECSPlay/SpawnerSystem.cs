@@ -29,7 +29,8 @@ namespace Playground
 			manager.SetComponentData(entity, new GameTimer{Value = 0.0f});
 			manager.SetComponentData(entity, new SpawnerState{
 				CurrentCount = 0,
-				SpawnCooldown = 1.0f
+				SpawnCooldown = 1.0f,
+				KillCount = 0
 			});
 
 			_gameTimer = entity;

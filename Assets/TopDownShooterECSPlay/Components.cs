@@ -76,6 +76,7 @@ namespace Playground
 	public struct SpawnerState : IComponentData
 	{
 		public int CurrentCount;
+		public int KillCount;
 		public float SpawnCooldown;
 	}
 

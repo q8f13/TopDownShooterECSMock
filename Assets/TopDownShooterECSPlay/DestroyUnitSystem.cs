@@ -36,7 +36,15 @@ namespace Playground
 		}
 		[Inject] private EnemyData _enemyCheckData;
 
+		struct Statistics
+		{
+			// [ReadOnly]public GameTimer Timer;
+			public ComponentDataArray<SpawnerState> State;
+		}
+
 		[Inject] private RemoveUnitBuffer _removeBuffer;
+
+		[Inject] private Statistics _gameState;
 
 		struct RemoveBulletsJob : IJobProcessComponentDataWithEntity<Shot>
 		{
@@ -102,14 +110,23 @@ namespace Playground
 				_data.Shots[i] = s;
 			}
 
+			SpawnerState ss = _gameState.State[0];
+			bool changed = false;
 			for(int i=0;i<_enemyCheckData.Enemies.Length;++i)
 			{
 				Health hp = _enemyCheckData.Healths[i];
 				if(hp.Value <= 0 || !playerAlive)
 				{
+					if(hp.Value <= 0)
+					{
+						ss.KillCount++;
+						changed = true;
+					}
 					PostUpdateCommands.DestroyEntity(_enemyCheckData.Entities[i]);
 				}
 			}
+			if(changed)
+				_gameState.State[0] = ss;
 
 			for(int i=0;i<_playerCheck.PlayerInput.Length;i++)
 			{
